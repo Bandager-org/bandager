@@ -9,22 +9,11 @@ import {UserDBEntry} from "../types/User";
 
 export const User = routeMaker("user", async (req: any, res: any, logger: Logger) => {
     const db = new DatabaseController();
-    // make sure the table 'Constants.TABLES.USERS' exists
-    // for whatever reason, the $1 syntax doesn't work here
-    await db.pool!.query(`
-            CREATE TABLE IF NOT EXISTS ${Constants.TABLES.USERS} (
-              id TEXT PRIMARY KEY,
-              banner VARCHAR(2048),
-              avatar VARCHAR(2048),
-              badgeurl VARCHAR(2048),
-              badgetooltip VARCHAR(48)
-            );`);
     const id = req.query.id;
 
-    const users = await db.pool!.query(`SELECT * FROM ${Constants.TABLES.USERS} WHERE id = $1;`, [id]);
     let user: UserDBEntry | undefined;
     try {
-        user = users.rows[0];
+        user = await db.getUser(id);
         if (user === undefined) throw new Error(`User not found.`);
     } catch (e) {
         // return a stub

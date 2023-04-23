@@ -12,4 +12,6 @@ export const Constants = Object.freeze({
     // Environment = "Production" | "Development"
     ENV: process.env.PROD ? "PROD" : "DEV",
     IS_DEV: !process.env.PROD,
+    // check if invoked command to run contains "--ephemeral"
+    IS_DB_EPHEMERAL: process.argv.includes("--ephemeral"),
 });

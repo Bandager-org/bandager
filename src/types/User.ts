@@ -11,7 +11,9 @@ export interface User {
         url: string;
         // The badge's tooltip
         tooltip: string;
-    }
+    },
+    mod: boolean;
+    dev: boolean;
 }
 
 export interface UserDBEntry {

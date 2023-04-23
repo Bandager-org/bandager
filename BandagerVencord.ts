@@ -1,21 +1,42 @@
-import {Devs} from "../../bandager-vencord/src/utils/constants";
-import definePlugin, {OptionType} from "../../bandager-vencord/src/utils/types";
-import {addBadge, BadgePosition, BadgeUserArgs} from "../../bandager-vencord/src/api/Badges";
-import {definePluginSettings} from "../../bandager-vencord/src/api/settings";
+import { Devs } from "@utils/constants";
+import definePlugin, { OptionType } from "@utils/types";
+import { addBadge, BadgePosition, BadgeUserArgs } from "@api/Badges";
+import { definePluginSettings } from "@api/settings";
+
+
+interface User {
+    // ID of the user, as a number in string form
+    id: string;
+    // URL to the user's banner
+    banner?: string;
+    // URL to the user's avatar
+    avatar?: string;
+    // Users badge
+    badge?: {
+        // URL to the badge's image
+        url: string;
+        // The badge's tooltip
+        tooltip: string;
+    };
+    mod: boolean;
+    dev: boolean;
+}
+
 
 const settings = definePluginSettings({
     backendURL: {
         type: OptionType.STRING,
-        default: "http://localhost:3000"
+        default: "http://localhost:3000",
+        description: "The URL of the Bandager API backend."
     }
-})
+});
 
 export default definePlugin({
     name: "Bandager",
     description: "Uses the [Bandager API](https://captain8771.github.io/bandager/) to get user banners, avatars, and badges.",
     authors: [Devs.captain],
     settings,
-    internalCache: [],
+    internalCache: [] as User[],
     patches: [
         {
             find: ".hasVerifiedEmailOrPhone=",
@@ -52,9 +73,9 @@ export default definePlugin({
     },
     async start() {
         // fetch a list of all users
-        const res = await fetch(`${settings.store.backendURL}/all`)
-        const users = await res.json()
-        this.internalCache = users.data
+        const res = await fetch(`${settings.store.backendURL}/all`);
+        const users = await res.json();
+        this.internalCache = users.data;
         for (const user of users.data) {
             // add the badge
             addBadge({
@@ -63,13 +84,13 @@ export default definePlugin({
                 link: "https://captain8771.github.io/bandager/",
                 position: BadgePosition.START,
                 shouldShow(userInfo: BadgeUserArgs): boolean {
-                    return userInfo.user.id === user.id
+                    return userInfo.user.id === user.id;
                 }
-            })
+            });
         }
         // add dev and mod badges
-        const res2 = await fetch(`${settings.store.backendURL}/special-badges`)
-        const badges = await res2.json()
+        const res2 = await fetch(`${settings.store.backendURL}/special-badges`);
+        const badges = await res2.json();
         addBadge({
             description: badges.data.dev.tooltip,
             image: badges.data.dev.url,
