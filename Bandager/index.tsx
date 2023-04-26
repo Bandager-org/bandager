@@ -145,7 +145,7 @@ const plugin = definePlugin({
     },
     _bulkFetch: debounce(async (ids: string[]) => {
         console.debug(`debouncing: fetching ${ids.length} users...`);
-        const res = await fetch(`${settings.store.backendURL}/users?ids=${ids.join(",")}`, {
+        const res = await fetch(`${settings.store.backendURL}/bulk-fetch?ids=${ids.join(",")}`, {
             headers: {
                 ClientMod: "Vencord/Official",
             }
