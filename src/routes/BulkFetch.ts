@@ -1,5 +1,5 @@
 import { User, UserDBEntry } from "types/User";
-import {Constants, DatabaseController, Logger, routeMaker} from "../utils";
+import { Constants, DatabaseController, Logger, routeMaker } from "../utils";
 
 export const BulkFetch = routeMaker("bulk-fetch", async (req: any, res: any, logger: Logger) => {
     const db = new DatabaseController();
@@ -17,12 +17,13 @@ export const BulkFetch = routeMaker("bulk-fetch", async (req: any, res: any, log
                 banner: undefined,
                 avatar: undefined,
                 badgeurl: undefined,
-                badgetooltip: undefined
+                badgetooltip: undefined,
+                staticavatar: undefined
             } as UserDBEntry);
         });
         users = users.concat(missing) as User[];
     }
-    
+
     return res.send({
         data: users,
         error: false

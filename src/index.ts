@@ -33,6 +33,7 @@ import { Constants } from './utils';
     app.get("/special-badges", Routes.SpecialBadges);
     Constants.IS_DEV && Constants.IS_DB_EPHEMERAL && app.get("/dump-state", Routes.DumpState);
     app.get("/bulk-fetch", Routes.BulkFetch);
+    app.get("/oauth-info", Routes.OAuth2Info);
 
 
     app.use((req, res, next) => {
@@ -43,8 +44,8 @@ import { Constants } from './utils';
         logger.error("404", req.method, req.url);
     });
 
-    app.listen(3000, async () => {
-        console.log('Example app listening on port 3000!');
+    app.listen(Constants.PORT, async () => {
+        console.log('Bandager API listening on port ' + Constants.PORT.toString() + '!');
         await run();
     });
 

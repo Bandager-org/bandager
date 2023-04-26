@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { addBadge, BadgePosition, BadgeUserArgs } from "@api/Badges";
+import {addBadge, BadgePosition, BadgeUserArgs, ProfileBadge, removeBadge} from "@api/Badges";
 import { definePluginSettings } from "@api/settings";
 import { Devs } from "@utils/constants";
 import { debounce } from "@utils/debounce";
@@ -26,20 +26,23 @@ import { Button, UserStore } from "@webpack/common";
 import { authorize } from "./utils";
 
 
-interface User {
+export interface User {
     // ID of the user, as a number in string form
     id: string;
     // URL to the user's banner
     banner?: string;
     // URL to the user's avatar
-    avatar?: string;
+    avatar?: {
+        animated?: string;
+        static: string;
+    }
     // Users badge
     badge?: {
         // URL to the badge's image
         url: string;
         // The badge's tooltip
         tooltip: string;
-    };
+    },
     mod: boolean;
     dev: boolean;
 }
@@ -55,15 +58,19 @@ const settings = definePluginSettings({
             </Button>
         )
     },
+    clearCacheButton: {
+        type: OptionType.COMPONENT,
+        description: "Clear the local cache.",
+        component: () => (
+            <Button onClick={() => plugin.clearCache()}>
+                Clear cache
+            </Button>
+        )
+    },
     backendURL: {
         type: OptionType.STRING,
         default: "http://localhost:3000",
         description: "The URL to the backend. Don't change unless you know what you're doing."
-    },
-    clientId: {
-        type: OptionType.STRING,
-        description: "Client ID to authorize against. Don't change unless you know what you're doing.",
-        default: "1100685290311528488",
     }
 });
 
@@ -73,13 +80,32 @@ const plugin = definePlugin({
     authors: [Devs.captain],
     settings,
     internalCache: [] as User[],
+    determineReturnOfGetAvatar: function (user: any, url: string, canBeAnimated: boolean) {
+        // url is the return value of the original function, which is a URL to the user's avatar.
+        plugin.bulkFetch(user.id);
+        const bandager = plugin.internalCache.find(x => x?.id === user.id);
+
+        if (bandager) {
+            if (bandager.avatar) {
+                if (canBeAnimated && bandager.avatar.animated) {
+                    return bandager.avatar.animated;
+                }
+                return bandager.avatar.static;
+            }
+        }
+        return url;
+    },
+    debug(...args: any[]) {
+        if (!IS_DEV) return;
+        console.log("[Bandager]", ...args);
+    },
     patches: [
         {
             find: ".hasVerifiedEmailOrPhone=",
             replacement: {
-                match: /\i.getAvatarURL=function\(\i,\i\){/,
-                replace: "$&$self.bulkFetch(this.id);let bandager=$self.internalCache.find(x=>x?.id===this.id);if(bandager){if(bandager.avatar){return bandager.avatar}};"
-            }
+                match: /(?<=(i.getAvatarURL=function\((\i),(\i)\){.+))return\s+((?:(?!\};).)*)/,
+                replace: "return (() => {const x=$4;const ret=$self.determineReturnOfGetAvatar(this, x, n);return ret;})();"
+            },
         },
         {
             find: ".getBannerURL=",
@@ -119,7 +145,7 @@ const plugin = definePlugin({
             .then(res => {
                 this.internalCache.push(res.data);
                 if (res.data.badge?.url) {
-                    addBadge({
+                    this.addBadge(id, {
                         description: res.data.badge.tooltip,
                         image: res.data.badge.url,
                         link: "https://captain8771.github.io/bandager/",
@@ -139,12 +165,12 @@ const plugin = definePlugin({
     bulkFetch: (id: string) => {
         if (!plugin._ids.includes(id) && !plugin.internalCache.find((x: any) => x?.id === id)) {
             plugin._ids.push(id);
-            console.debug(`Debouncing bulk fetch for ${plugin._ids.length} users... (latest: ${id})`);
+            plugin.debug(`Debouncing bulk fetch for ${plugin._ids.length} users... (latest: ${id})`);
             plugin._bulkFetch(plugin._ids);
         }
     },
     _bulkFetch: debounce(async (ids: string[]) => {
-        console.debug(`debouncing: fetching ${ids.length} users...`);
+        plugin.debug(`bulk fetching ${ids.length} users...`);
         const res = await fetch(`${settings.store.backendURL}/bulk-fetch?ids=${ids.join(",")}`, {
             headers: {
                 ClientMod: "Vencord/Official",
@@ -154,7 +180,21 @@ const plugin = definePlugin({
         plugin.internalCache.concat(data.data);
         plugin._ids = [];
     }, 1000),
+    clearCache: () => {
+        plugin.internalCache = [];
+        plugin._ids = [];
+        plugin.badgeKeys.forEach(x => removeBadge(x));
+        plugin.badgeKeys = [];
+    },
+    badgeKeys: [] as ProfileBadge[],
     async start() {
+        const re = await fetch(`${settings.store.backendURL}/oauth-info`, {
+            headers: {
+                ClientMod: "Vencord/Official",
+            }
+        }).then(res => res.json());
+        settings.store.clientId = re.id;
+
         // fetch badges for current user prematurely
         const { id } = UserStore.getCurrentUser();
         await this.ensureDataForUserExists(id);
@@ -186,6 +226,16 @@ const plugin = definePlugin({
                 return user?.mod ?? false;
             }
         });
+    },
+    addBadge(id: string, badge: ProfileBadge) {
+        badge.key = id;
+        if (this.badgeKeys.find(x => x.key === id)) return;
+        addBadge(badge);
+        this.badgeKeys.push(badge);
+    },
+    removeBadge(id: string) {
+        removeBadge(this.badgeKeys.find(x => x.key === id));
+        this.badgeKeys = this.badgeKeys.filter(x => x !== id);
     }
 });
 

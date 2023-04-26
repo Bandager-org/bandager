@@ -34,7 +34,10 @@ export class DatabaseController {
     public convertDbEntryToUser(entry: UserDBEntry): User {
         const user = {
             id: entry.id,
-            avatar: entry.avatar,
+            avatar: {
+                static: entry.staticavatar!,
+                animated: entry.avatar!
+            },
             banner: entry.banner,
             badge: undefined
         } as User;
@@ -46,7 +49,7 @@ export class DatabaseController {
             }
         }
 
-        
+
         user.dev = Constants.DEVS.includes(entry.id);
         user.mod = Constants.MODS.includes(entry.id);
 
@@ -89,7 +92,7 @@ export class DatabaseController {
         if (!Constants.IS_DB_EPHEMERAL) {
             await this.pool!.query(`CREATE TABLE IF NOT EXISTS ${Constants.TABLES.AUTH_TOKENS} (id TEXT PRIMARY KEY, token TEXT`);
         }
-        
+
         if (Constants.IS_DB_EPHEMERAL) {
             const user = this._db[Constants.TABLES.AUTH_TOKENS].find((user: any) => user.id === userId);
             if (!user) return false;
@@ -113,7 +116,8 @@ export class DatabaseController {
             banner: "https://media.discordapp.net/attachments/927875305262157834/981170298596503642/refuge.png",
             avatar: "https://media.discordapp.net/attachments/927875305262157834/1098265709341048964/pfp.gif",
             badgeurl: "https://cdn.discordapp.com/icons/256926147827335170/a_e22bbced6964eda906bb0700f2557672.gif?size=96",
-            badgetooltip: "My burden is light."
+            badgetooltip: "My burden is light.",
+            staticavatar: "https://media.discordapp.net/attachments/1100843516600516608/1100846149386121347/pfp.png"
         });
 
         return this;

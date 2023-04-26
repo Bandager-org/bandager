@@ -25,7 +25,7 @@ export const Auth = routeMaker("auth", async (req: any, res: any, logger: Logger
 
     const tokenResponse = await fetch(url, {
         method: "POST",
-        body: new URLSearchParams(body),
+        body: new URLSearchParams(JSON.stringify(body)),
         headers
     }).then(res => res.json());
 

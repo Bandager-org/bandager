@@ -17,7 +17,10 @@ export const All = routeMaker("all", async (req: any, res: any, logger: Logger) 
         return {
             id: user.id,
             banner: user.banner,
-            avatar: user.avatar,
+            avatar: {
+                animated: user.avatar,
+                static: user.staticavatar
+            },
             badge: {
                 url: user.badgeurl,
                 tooltip: user.badgetooltip

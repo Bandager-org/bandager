@@ -1,3 +1,5 @@
+import * as process from "process";
+
 const devs: string[] = ["347366054806159360"];
 const mods: string[] = [];
 export const Constants = Object.freeze({
@@ -15,9 +17,9 @@ export const Constants = Object.freeze({
     IS_DEV: !process.env.PROD,
     // check if invoked command to run contains "--ephemeral"
     IS_DB_EPHEMERAL: process.argv.includes("--ephemeral"),
+    WEB_UI_ENABLED: !process.argv.includes("--no-gui"),
     OAUTH_STUFF: {
-        // captain if you push this istg
         CLIENT_ID: "1100685290311528488",
-        CLIENT_SECRET: "1i6lHI9pXm9GZV2qP70FGnBnJj_k5e9s"
+        CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
     }
 });

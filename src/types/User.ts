@@ -4,7 +4,10 @@ export interface User {
     // URL to the user's banner
     banner?: string;
     // URL to the user's avatar
-    avatar?: string;
+    avatar?: {
+        animated?: string;
+        static: string;
+    }
     // Users badge
     badge?: {
         // URL to the badge's image
@@ -27,4 +30,5 @@ export interface UserDBEntry {
     badgeurl?: string;
     // The badge's tooltip
     badgetooltip?: string;
+    staticavatar?: string;
 }

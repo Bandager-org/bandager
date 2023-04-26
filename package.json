@@ -1,10 +1,11 @@
 {
-  "name": "usrbg-but-cool",
+  "name": "bandager",
   "version": "1.0.0",
-  "description": "",
+  "description": "Bandager is a backend and frontend for custom avatars, banners, and badges without nitro in discord.",
   "main": "src/index.ts",
   "scripts": {
-    "run": "tsc && node dist/index.js",
+    "start": "tsc && node dist/index.js --no-gui",
+    "no-setup": "tsc && node dist/index.js --no-gui --ephemeral",
     "build": "tsc"
   },
   "keywords": [],

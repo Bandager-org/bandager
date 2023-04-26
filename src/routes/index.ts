@@ -6,3 +6,4 @@ export * from "./SpecialBadges";
 export * from "./Auth";
 export * from "./DumpState";
 export * from "./BulkFetch";
+export * from "./OAuth2Info";

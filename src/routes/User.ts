@@ -35,7 +35,10 @@ export const User = routeMaker("user", async (req: any, res: any, logger: Logger
         data: {
             id: user?.id, // use ?. to make linter happy :)
             banner: user?.banner,
-            avatar: user?.avatar,
+            avatar: {
+                animated: user?.avatar,
+                static: user?.staticavatar
+            },
             badge: {
                 url: user?.badgeurl,
                 tooltip: user?.badgetooltip
