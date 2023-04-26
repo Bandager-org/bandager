@@ -69,5 +69,9 @@ client.on('error', (error) => {
 
 // export function to run the bot in the background
 export async function run() {
-    await client.login(process.env.DISCORD_TOKEN!);
-}
+    try {
+        await client.login(process.env.DISCORD_TOKEN!);
+    } catch (e) {
+        console.error("Error logging into Discord: ", e);
+    }
+    }

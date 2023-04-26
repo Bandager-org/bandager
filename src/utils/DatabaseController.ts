@@ -1,13 +1,13 @@
 import {Pool} from 'pg';
 import {Constants} from "./Constants";
-import { UserDBEntry } from 'types/User';
+import { User, UserDBEntry } from 'types/User';
+import * as BCrypt from "bcrypt";
 
 export class DatabaseController {
     // this is a singleton class
     private static instance: DatabaseController;
     public pool?: Pool;
-    // type it as a <string, UserDBEntry[]>
-    private _db: { [key: string]: UserDBEntry[] } = {};
+    private _db: { [key: string]: any[] } = {};
 
     public constructor() {
         if (DatabaseController.instance) {
@@ -26,8 +26,86 @@ export class DatabaseController {
         });
     }
 
+    public _dump_state() {
+        if (!Constants.IS_DEV || !Constants.IS_DB_EPHEMERAL) return "nope";
+        return this._db;
+    }
+
+    public convertDbEntryToUser(entry: UserDBEntry): User {
+        const user = {
+            id: entry.id,
+            avatar: entry.avatar,
+            banner: entry.banner,
+            badge: undefined
+        } as User;
+
+        if (entry.badgeurl && entry.badgetooltip) {
+            user.badge = {
+                url: entry.badgeurl!,
+                tooltip: entry.badgetooltip!
+            }
+        }
+
+        
+        user.dev = Constants.DEVS.includes(entry.id);
+        user.mod = Constants.MODS.includes(entry.id);
+
+        // check for anything missing
+        ["id", "avatar", "banner", "badge"].forEach((el: string) => {
+            if (Object.keys(user).includes(el)) return;
+            Object.defineProperty(user, el, { value: undefined })
+        });
+
+        return user;
+    }
+
+    public async setToken(userId: string, token: string) {
+        // if the table doesn't exist, and the db isn't ephemeral, create it
+        if (!Constants.IS_DB_EPHEMERAL) {
+            await this.pool!.query(`CREATE TABLE IF NOT EXISTS ${Constants.TABLES.AUTH_TOKENS} (id TEXT PRIMARY KEY, token TEXT`);
+        }
+        // hash the token, with salt.
+        const salt = await BCrypt.genSalt(10);
+        const hash = await BCrypt.hash(token, salt);
+        if (Constants.IS_DB_EPHEMERAL) {
+            this._db[Constants.TABLES.AUTH_TOKENS].push({
+                id: userId,
+                token: hash
+            });
+            return;
+        }
+
+        await this.pool!.query(`INSERT INTO ${Constants.TABLES.AUTH_TOKENS} (id, token) VALUES ($1, $2) ON CONFLICT (id) DO UPDATE SET token = $2;`, [userId, hash]);
+    }
+
+    public async generateToken(id: string) {
+        const idAsInt: number = parseInt(id);
+        const token = [Math.random().toString(36).substring(2, 15), idAsInt.toString(36),  Math.random().toString(36).substring(2, 15)].join(".");
+        return token;
+    }
+
+    public async isTokenValid(userId: string, token: string) {
+        // if the table doesn't exist, and the db isn't ephemeral, create it
+        if (!Constants.IS_DB_EPHEMERAL) {
+            await this.pool!.query(`CREATE TABLE IF NOT EXISTS ${Constants.TABLES.AUTH_TOKENS} (id TEXT PRIMARY KEY, token TEXT`);
+        }
+        
+        if (Constants.IS_DB_EPHEMERAL) {
+            const user = this._db[Constants.TABLES.AUTH_TOKENS].find((user: any) => user.id === userId);
+            if (!user) return false;
+            const actualToken = user.token;
+            return await BCrypt.compare(token, actualToken);
+        }
+
+        const user = await this.pool!.query(`SELECT * FROM ${Constants.TABLES.AUTH_TOKENS} WHERE id = $1;`, [userId]);
+        if (!user.rows[0]) return false;
+        const actualToken = user.rows[0].token;
+        return await BCrypt.compare(token, actualToken);
+    }
+
     private _initEphemeral(): DatabaseController {
         this._db[Constants.TABLES.USERS] = [];
+        this._db[Constants.TABLES.AUTH_TOKENS] = [];
 
         // add some users
         this._db[Constants.TABLES.USERS].push({
