@@ -7,7 +7,7 @@ export const DumpState = routeMaker("dump-state", async (req: any, res: any, log
             message: "Not found.",
             error: true
         });
-        return
+        return;
     }
 
     const db = new DatabaseController();

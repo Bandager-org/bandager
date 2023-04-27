@@ -11,30 +11,34 @@ export const Auth = routeMaker("auth", async (req: any, res: any, logger: Logger
     }
 
     // turn the code into an oauth2 token using discord api
-    const url = "https://discord.com/api/oauth2/token"
+    const url = "https://discord.com/api/oauth2/token";
     const body = {
         client_id: Constants.OAUTH_STUFF.CLIENT_ID,
         client_secret: Constants.OAUTH_STUFF.CLIENT_SECRET,
         grant_type: "authorization_code",
         code,
         redirect_uri: "http://localhost:3000/auth",
-    }
+    };
     const headers = {
         "Content-Type": "application/x-www-form-urlencoded"
-    }
+    };
+
+    const formBody = new URLSearchParams(Object.entries(body));
 
     const tokenResponse = await fetch(url, {
         method: "POST",
-        body: new URLSearchParams(JSON.stringify(body)),
+        body: formBody,
         headers
     }).then(res => res.json());
 
     const { token_type, access_token } = tokenResponse;
     if (!token_type || !access_token) {
-        return res.status(500).send({
+        res.status(500).send({
             message: "Something went wrong.",
             error: true
         });
+        logger.error("Something went wrong: ", tokenResponse);
+        return;
     }
 
     // get the user's info using the token
@@ -47,10 +51,12 @@ export const Auth = routeMaker("auth", async (req: any, res: any, logger: Logger
     // get the id
     const { id } = userResponse;
     if (!id) {
-        return res.status(500).send({
+        res.status(500).send({
             message: "Something went wrong. [2]",
             error: true
         });
+        logger.error("Something went wrong[2]: ", userResponse);
+        return;
     }
 
     // generate a token

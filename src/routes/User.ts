@@ -14,7 +14,7 @@ export const User = routeMaker("user", async (req: any, res: any, logger: Logger
     let user: UserDBEntry | undefined;
     try {
         user = await db.getUser(id);
-        if (user === undefined) throw new Error(`User not found.`);
+        if (user === undefined) throw new Error("User not found.");
     } catch (e) {
         // return a stub
         res.status(200).send({
@@ -43,8 +43,8 @@ export const User = routeMaker("user", async (req: any, res: any, logger: Logger
                 url: user?.badgeurl,
                 tooltip: user?.badgetooltip
             },
-            dev: Constants.DEVS.includes(user?.id!),
-            mod: Constants.MODS.includes(user?.id!)
+            dev: Constants.DEVS.includes(user?.id),
+            mod: Constants.MODS.includes(user?.id)
         }
     });
 

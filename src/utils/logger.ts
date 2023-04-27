@@ -4,7 +4,7 @@ const styles = Object.freeze([
     "color: #777777",
     "color: #F0F0F0",
     "color: #777777"
-])
+]);
 
 enum LogLevel {
     DEBUG = 0,
@@ -18,12 +18,12 @@ export class Logger {
     public readonly name: string;
     public readonly level: number;
 
-    constructor(name: string, level: number = -1) {
+    constructor(name: string, level = -1) {
         this.name = name.toUpperCase();
         this.level = level;
     }
 
-    private _log(level: number, levelstr: string = "UNKNOWN", ...args: any[]) {
+    private _log(level: number, levelstr = "UNKNOWN", ...args: any[]) {
         if (level >= this.level) {
             console.log(`%c[%c${this.name}%c|%c${levelstr}%c]`, ...styles, ...args);
         }

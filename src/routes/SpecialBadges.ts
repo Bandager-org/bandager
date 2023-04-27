@@ -14,6 +14,6 @@ export const SpecialBadges = routeMaker("special-badges", async (req: any, res: 
         },
         error: false,
         message: "Special badges"
-    })
+    });
 });
 

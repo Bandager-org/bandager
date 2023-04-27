@@ -1,9 +1,9 @@
-import express from 'express';
-import cors from 'cors';
+import express from "express";
+import cors from "cors";
 import {Logger} from "./utils";
 import * as Routes from "./routes";
 import { run } from "./discord";
-import { Constants } from './utils';
+import { Constants } from "./utils";
 
 (async () => {
     const app: express.Application = express();
@@ -18,10 +18,10 @@ import { Constants } from './utils';
             res.send({
                 error: true,
                 message: "You must send the 'ClientMod' header containing the client mod, or 'none' (case-insensitive) if you're manually making requests.\nFor example, the official vencord plugin sends 'Vencord/Official' in the header."
-            })
-            return
+            });
+            return;
         }
-        logger.info(`${req.method} ${req.path} from client mod ${mod}`)
+        logger.info(`${req.method} ${req.path} from client mod ${mod}`);
         next();
     });
 
@@ -45,8 +45,8 @@ import { Constants } from './utils';
     });
 
     app.listen(Constants.PORT, async () => {
-        console.log('Bandager API listening on port ' + Constants.PORT.toString() + '!');
+        console.log("Bandager API listening on port " + Constants.PORT.toString() + "!");
         await run();
     });
 
-})()
+})();

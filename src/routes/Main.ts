@@ -1,5 +1,5 @@
 import {Constants, Logger, routeMaker} from "../utils";
-import {open} from "fs/promises"
+import {open} from "fs/promises";
 
 
 export const Main = routeMaker("", async (req: any, res: any, logger: Logger) => {

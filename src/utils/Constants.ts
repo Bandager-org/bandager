@@ -2,7 +2,7 @@ import * as process from "process";
 
 const devs: string[] = ["347366054806159360"];
 const mods: string[] = [];
-export const Constants = Object.freeze({
+export const Constants = {
     // This is the port that the server will listen on
     PORT: 3000,
     // This is the map of table names
@@ -21,5 +21,6 @@ export const Constants = Object.freeze({
     OAUTH_STUFF: {
         CLIENT_ID: "1100685290311528488",
         CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
-    }
-});
+    },
+    BOT_ENABLED: false,
+};

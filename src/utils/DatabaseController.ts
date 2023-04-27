@@ -1,15 +1,16 @@
-import {Pool} from 'pg';
+import {Pool} from "pg";
 import {Constants} from "./Constants";
-import { User, UserDBEntry } from 'types/User';
+import { User, UserDBEntry } from "types/User";
 import * as BCrypt from "bcrypt";
 
 export class DatabaseController {
     // this is a singleton class
     private static instance: DatabaseController;
-    public pool?: Pool;
+    public pool: Pool;
     private _db: { [key: string]: any[] } = {};
 
     public constructor() {
+        this.pool = new Pool(); // hack to make typescript shut up
         if (DatabaseController.instance) {
             return DatabaseController.instance;
         }
@@ -22,7 +23,7 @@ export class DatabaseController {
             host: process.env.DB_HOST,
             database: "badgeapi",
             password: process.env.DB_PASS,
-            port: parseInt(process.env.DB_PORT!),
+            port: parseInt(process.env.DB_PORT || "5432"),
         });
     }
 
@@ -35,8 +36,8 @@ export class DatabaseController {
         const user = {
             id: entry.id,
             avatar: {
-                static: entry.staticavatar!,
-                animated: entry.avatar!
+                static: entry.staticavatar,
+                animated: entry.avatar
             },
             banner: entry.banner,
             badge: undefined
@@ -44,9 +45,9 @@ export class DatabaseController {
 
         if (entry.badgeurl && entry.badgetooltip) {
             user.badge = {
-                url: entry.badgeurl!,
-                tooltip: entry.badgetooltip!
-            }
+                url: entry.badgeurl,
+                tooltip: entry.badgetooltip
+            };
         }
 
 
@@ -56,7 +57,7 @@ export class DatabaseController {
         // check for anything missing
         ["id", "avatar", "banner", "badge"].forEach((el: string) => {
             if (Object.keys(user).includes(el)) return;
-            Object.defineProperty(user, el, { value: undefined })
+            Object.defineProperty(user, el, { value: undefined });
         });
 
         return user;
@@ -65,7 +66,7 @@ export class DatabaseController {
     public async setToken(userId: string, token: string) {
         // if the table doesn't exist, and the db isn't ephemeral, create it
         if (!Constants.IS_DB_EPHEMERAL) {
-            await this.pool!.query(`CREATE TABLE IF NOT EXISTS ${Constants.TABLES.AUTH_TOKENS} (id TEXT PRIMARY KEY, token TEXT`);
+            await this.pool.query(`CREATE TABLE IF NOT EXISTS ${Constants.TABLES.AUTH_TOKENS} (id TEXT PRIMARY KEY, token TEXT`);
         }
         // hash the token, with salt.
         const salt = await BCrypt.genSalt(10);
@@ -78,7 +79,7 @@ export class DatabaseController {
             return;
         }
 
-        await this.pool!.query(`INSERT INTO ${Constants.TABLES.AUTH_TOKENS} (id, token) VALUES ($1, $2) ON CONFLICT (id) DO UPDATE SET token = $2;`, [userId, hash]);
+        await this.pool.query(`INSERT INTO ${Constants.TABLES.AUTH_TOKENS} (id, token) VALUES ($1, $2) ON CONFLICT (id) DO UPDATE SET token = $2;`, [userId, hash]);
     }
 
     public async generateToken(id: string) {
@@ -90,7 +91,7 @@ export class DatabaseController {
     public async isTokenValid(userId: string, token: string) {
         // if the table doesn't exist, and the db isn't ephemeral, create it
         if (!Constants.IS_DB_EPHEMERAL) {
-            await this.pool!.query(`CREATE TABLE IF NOT EXISTS ${Constants.TABLES.AUTH_TOKENS} (id TEXT PRIMARY KEY, token TEXT`);
+            await this.pool.query(`CREATE TABLE IF NOT EXISTS ${Constants.TABLES.AUTH_TOKENS} (id TEXT PRIMARY KEY, token TEXT`);
         }
 
         if (Constants.IS_DB_EPHEMERAL) {
@@ -100,7 +101,7 @@ export class DatabaseController {
             return await BCrypt.compare(token, actualToken);
         }
 
-        const user = await this.pool!.query(`SELECT * FROM ${Constants.TABLES.AUTH_TOKENS} WHERE id = $1;`, [userId]);
+        const user = await this.pool.query(`SELECT * FROM ${Constants.TABLES.AUTH_TOKENS} WHERE id = $1;`, [userId]);
         if (!user.rows[0]) return false;
         const actualToken = user.rows[0].token;
         return await BCrypt.compare(token, actualToken);
@@ -125,7 +126,7 @@ export class DatabaseController {
 
     public async getUsers(): Promise<UserDBEntry[]> {
         if (Constants.IS_DB_EPHEMERAL) return this._db[Constants.TABLES.USERS];
-        await this.pool!.query(`
+        await this.pool.query(`
             CREATE TABLE IF NOT EXISTS ${Constants.TABLES.USERS} (
               id TEXT PRIMARY KEY,
               banner VARCHAR(2048),
@@ -134,7 +135,7 @@ export class DatabaseController {
               badgetooltip VARCHAR(48)
             );`);
 
-        const users = await this.pool!.query(`SELECT * FROM ${Constants.TABLES.USERS};`);
+        const users = await this.pool.query(`SELECT * FROM ${Constants.TABLES.USERS};`);
         return users.rows;
     }
 
@@ -145,7 +146,7 @@ export class DatabaseController {
     }
 
     public async query(query: string, values: any[]): Promise<any> {
-        const client = await this.pool!.connect();
+        const client = await this.pool.connect();
         try {
             return await client.query(query, values);
         } finally {
@@ -154,6 +155,6 @@ export class DatabaseController {
     }
 
     public async close(): Promise<void> {
-        await this.pool!.end();
+        await this.pool.end();
     }
 }

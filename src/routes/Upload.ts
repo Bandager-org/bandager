@@ -3,7 +3,7 @@ import {Constants, DatabaseController, Logger, routeMaker} from "../utils";
 
 export const Upload = routeMaker("upload", async (req: any, res: any, logger: Logger) => {
     const db = new DatabaseController();
-    await db.pool!.query(`
+    await db.pool.query(`
             CREATE TABLE IF NOT EXISTS pending (
               id TEXT PRIMARY KEY,
               banner VARCHAR(2048),
@@ -18,6 +18,4 @@ export const Upload = routeMaker("upload", async (req: any, res: any, logger: Lo
     const avatar = req.headers.avatar;
     const badgeurl = req.headers.badge;
     const badgetooltip = req.headers.tooltip;
-
-
 });

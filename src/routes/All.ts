@@ -25,9 +25,9 @@ export const All = routeMaker("all", async (req: any, res: any, logger: Logger) 
                 url: user.badgeurl,
                 tooltip: user.badgetooltip
             },
-            dev: Constants.DEVS.includes(user?.id!),
-            mod: Constants.MODS.includes(user?.id!)
-        }
+            dev: Constants.DEVS.includes(user?.id),
+            mod: Constants.MODS.includes(user?.id)
+        };
     });
     res.status(200).send({
         data: userList,

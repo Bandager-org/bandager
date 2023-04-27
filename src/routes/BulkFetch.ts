@@ -3,8 +3,8 @@ import { Constants, DatabaseController, Logger, routeMaker } from "../utils";
 
 export const BulkFetch = routeMaker("bulk-fetch", async (req: any, res: any, logger: Logger) => {
     const db = new DatabaseController();
-    const ids: string[] = req.query.ids?.split(",")
-    if (!ids) return res.send({ data: [], error: false})
+    const ids: string[] = req.query.ids?.split(",");
+    if (!ids) return res.send({ data: [], error: false});
 
     let users = (await db.getUsers()).filter(el => ids.includes(el.id)).map(db.convertDbEntryToUser);
     // check for any missing users

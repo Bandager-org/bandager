@@ -1,6 +1,7 @@
-import * as Discord from 'discord.js';
-import {ActivityType} from 'discord.js';
+import * as Discord from "discord.js";
+import {ActivityType} from "discord.js";
 import CommandHandlers from "./handlers";
+import { Constants } from "utils";
 
 const client = new Discord.Client({
     // all intents
@@ -15,7 +16,7 @@ const client = new Discord.Client({
         Discord.GatewayIntentBits.MessageContent,
     ],
     allowedMentions: {
-        parse: ['users'],
+        parse: ["users"],
         repliedUser: true
     },
     presence: {
@@ -35,19 +36,20 @@ const client = new Discord.Client({
             os: "Android"
         }
     }
-})
+});
 
-client.on('ready', () => {
+client.on("ready", () => {
     console.log(`Logged in as ${client.user?.tag}!`);
 });
 
-client.on('messageCreate', async (message) => {
+client.on("messageCreate", async (message) => {
     if (message.author.bot) return;
     const prefix = "bandage ";
     if (!message.content.toLowerCase().startsWith(prefix)) return;
     // separate command and args, keeping args as a string
+    // eslint-disable-next-line prefer-const
     let [command, ..._args] = message.content.slice(prefix.length).split(" ");
-    let args: string = _args.join(" ");
+    const args: string = _args.join(" ");
     const ArgRegex = /"([^"]*)"|([^\s]+)/g;
 
     // make args a list of strings
@@ -62,16 +64,22 @@ client.on('messageCreate', async (message) => {
     }
 });
 
-client.on('error', (error) => {
-    console.error('Discord client error: ', error);
+client.on("error", (error) => {
+    console.error("Discord client error: ", error);
 });
 
 
 // export function to run the bot in the background
 export async function run() {
     try {
-        await client.login(process.env.DISCORD_TOKEN!);
+        Constants.BOT_ENABLED = true;
+        await client.login(process.env.DISCORD_TOKEN?.toString?.());
     } catch (e) {
-        console.error("Error logging into Discord: ", e);
+        Constants.BOT_ENABLED = false;
+        // make sure e is an error
+        if (e instanceof Error) {
+            console.error("Error logging into Discord: ", e.message);
+            console.error("This can be safely ignored if you are not using the Discord bot."); 
+        }
     }
-    }
+}
