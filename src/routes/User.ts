@@ -3,8 +3,8 @@ import {
     routeMaker,
     DatabaseController,
     Constants
-} from "../utils";
-import {UserDBEntry} from "../types/User";
+} from "@utils";
+import {UserDBEntry} from "@interfaces/User";
 
 
 export const User = routeMaker("user", async (req: any, res: any, logger: Logger) => {

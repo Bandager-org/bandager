@@ -4,11 +4,11 @@
   "description": "Bandager is a backend and frontend for custom avatars, banners, and badges without nitro in discord.",
   "main": "src/index.ts",
   "scripts": {
-    "start": "tsc && node dist/index.js --no-gui",
-    "no-setup": "tsc && node dist/index.js --no-gui --ephemeral",
+    "start": "tsc && tsc-alias && node dist/index.js --no-gui",
+    "no-setup": "tsc && tsc-alias && node dist/index.js --no-gui --ephemeral",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "build": "tsc"
+    "build": "tsc && tsc-alias"
   },
   "keywords": [],
   "author": "",
@@ -30,6 +30,7 @@
     "@typescript-eslint/eslint-plugin": "^5.59.1",
     "@typescript-eslint/parser": "^5.59.1",
     "eslint": "^8.39.0",
+    "tsc-alias": "^1.8.5",
     "typescript": "^5.0.4"
   }
 }

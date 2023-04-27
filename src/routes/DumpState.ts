@@ -1,4 +1,4 @@
-import {Constants, DatabaseController, Logger, routeMaker} from "../utils";
+import {Constants, DatabaseController, Logger, routeMaker} from "@utils";
 
 export const DumpState = routeMaker("dump-state", async (req: any, res: any, logger: Logger) => {
     if (!Constants.IS_DEV  || !Constants.IS_DB_EPHEMERAL) {

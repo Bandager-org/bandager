@@ -1,4 +1,4 @@
-import {Constants, Logger, routeMaker} from "../utils";
+import {Constants, Logger, routeMaker} from "@utils";
 
 export const OAuth2Info = routeMaker("oauth-info", async (req: any, res: any, logger: Logger) => {
     res.send({

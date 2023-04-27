@@ -1,9 +1,9 @@
 import express from "express";
 import cors from "cors";
-import {Logger} from "./utils";
-import * as Routes from "./routes";
-import { run } from "./discord";
-import { Constants } from "./utils";
+import {Logger} from "@utils";
+import * as Routes from "@routes";
+import { run } from "@discord";
+import { Constants } from "@utils";
 
 (async () => {
     const app: express.Application = express();
@@ -15,10 +15,16 @@ import { Constants } from "./utils";
         // check the "ClientMod" header
         const mod = req.headers["clientmod"];
         if (!mod) {
-            res.send({
-                error: true,
-                message: "You must send the 'ClientMod' header containing the client mod, or 'none' (case-insensitive) if you're manually making requests.\nFor example, the official vencord plugin sends 'Vencord/Official' in the header."
-            });
+            // check if its a browser
+            if (!(req.headers["user-agent"]?.toLowerCase()?.includes("mozilla") && !req.headers["user-agent"]?.toLowerCase().includes("discord"))) {
+                res.send({
+                    error: true,
+                    message: "You must send the 'ClientMod' header containing the client mod, or 'none' (case-insensitive) if you're manually making requests.\nFor example, the official vencord plugin sends 'Vencord/Official' in the header."
+                });
+                return;
+            }
+            logger.info(`${req.method} ${req.path} from browser`);
+            next();
             return;
         }
         logger.info(`${req.method} ${req.path} from client mod ${mod}`);

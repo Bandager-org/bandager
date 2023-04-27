@@ -1,5 +1,5 @@
-import { User, UserDBEntry } from "types/User";
-import { Constants, DatabaseController, Logger, routeMaker } from "../utils";
+import { User, UserDBEntry } from "@interfaces/User";
+import { Constants, DatabaseController, Logger, routeMaker } from "@utils";
 
 export const BulkFetch = routeMaker("bulk-fetch", async (req: any, res: any, logger: Logger) => {
     const db = new DatabaseController();

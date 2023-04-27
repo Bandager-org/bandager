@@ -3,7 +3,7 @@ import {
     routeMaker,
     DatabaseController,
     Constants
-} from "../utils";
+} from "@utils";
 
 
 export const All = routeMaker("all", async (req: any, res: any, logger: Logger) => {

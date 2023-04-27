@@ -1,4 +1,4 @@
-import {Constants, DatabaseController, Logger, routeMaker} from "../utils";
+import {Constants, DatabaseController, Logger, routeMaker} from "@utils";
 
 export const SpecialBadges = routeMaker("special-badges", async (req: any, res: any, logger: Logger) => {
     res.send({

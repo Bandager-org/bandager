@@ -1,4 +1,4 @@
-import {Constants, Logger, routeMaker} from "../utils";
+import {Constants, Logger, routeMaker} from "@utils";
 import {open} from "fs/promises";
 
 

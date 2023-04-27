@@ -6,7 +6,7 @@ const styles = Object.freeze([
     "color: #777777"
 ]);
 
-enum LogLevel {
+export enum LogLevel {
     DEBUG = 0,
     INFO = 1,
     WARN = 2,

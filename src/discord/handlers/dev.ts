@@ -1,5 +1,5 @@
 import {Message} from "discord.js";
-import {Constants} from "../../utils";
+import {Constants} from "@utils";
 
 export async function argTestCommand(message: Message, args: string[]): Promise<void> {
     if (!Constants.IS_DEV) {

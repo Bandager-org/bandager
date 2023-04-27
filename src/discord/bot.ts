@@ -1,7 +1,7 @@
 import * as Discord from "discord.js";
 import {ActivityType} from "discord.js";
 import CommandHandlers from "./handlers";
-import { Constants } from "utils";
+import { Constants } from "@utils";
 
 const client = new Discord.Client({
     // all intents

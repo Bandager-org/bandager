@@ -1,4 +1,4 @@
-import {Constants, DatabaseController, Logger, routeMaker} from "../utils";
+import {Constants, DatabaseController, Logger, routeMaker} from "@utils";
 
 export const Auth = routeMaker("auth", async (req: any, res: any, logger: Logger) => {
     const db = new DatabaseController();

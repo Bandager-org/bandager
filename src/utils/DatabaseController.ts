@@ -1,6 +1,6 @@
 import {Pool} from "pg";
 import {Constants} from "./Constants";
-import { User, UserDBEntry } from "types/User";
+import { User, UserDBEntry } from "@interfaces/User";
 import * as BCrypt from "bcrypt";
 
 export class DatabaseController {
