@@ -1,0 +1,54 @@
+.theme-dark {
+    --primary-color: #111111;
+    --text-color: #ffffff;
+    --secondary-color: #222222;
+    --accent-color: #0b83bb;
+}
+
+.theme-light {
+    --primary-color: #ebebeb;
+    --text-color: #000000;
+    --secondary-color: #c7c7c7;
+    --accent-color: #0b83bb;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--primary-color);
+    color: var(--text-color);
+}
+
+.navbar.expanded {
+    /* cover half the page */
+    height: 50vh;
+    /* make it smoothly animate the height */
+    transition: height 0.5s ease;
+}
+
+.navbar {
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    width: 100%;
+    height: 60x;
+    display: flex;
+    align-items: flex-start;
+    /* make it smoothly animate the height */
+    transition: height 0.5s ease;
+}
+
+.navbar-item {
+    height: 40px;
+    width: 40px;
+    margin: 5px;
+    padding: 5px;
+    background-color: var(--primary-color);
+    border-radius: 5px;
+}
+
+.navbar-item:hover {
+    background-color: var(--accent-color);
+    border-color: calc(var(--accent-color) * 2);
+    cursor:  pointer;
+}

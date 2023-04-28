@@ -4,11 +4,11 @@ export const SpecialBadges = routeMaker("special-badges", async (req: any, res: 
     res.send({
         data: {
             dev: {
-                url: "https://cdn.discordapp.com/icons/1087733972508868640/5f15da9e818b40e2d0ca008fc3488d89.webp?size=512",
+                url: "https://cdn.discordapp.com/attachments/1098205591568130078/1101455427071393822/BandagerDev.png",
                 tooltip: "Bandager Developer"
             },
             mod: {
-                url: "https://media.discordapp.net/attachments/1098197341363785791/1098320229580423168/Moderator.png",
+                url: "https://cdn.discordapp.com/attachments/1098205591568130078/1101455426769387571/Moderator.png",
                 tooltip: "Bandager Moderator"
             }
         },

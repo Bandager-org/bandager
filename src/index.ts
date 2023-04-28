@@ -4,6 +4,7 @@ import {Logger} from "@utils";
 import * as Routes from "@routes";
 import { run } from "@discord";
 import { Constants } from "@utils";
+import path from "path";
 
 (async () => {
     const app: express.Application = express();
@@ -31,7 +32,7 @@ import { Constants } from "@utils";
         next();
     });
 
-    app.get("/", Routes.Main);
+    // app.get("/", Routes.Main);
     app.get("/all", Routes.All);
     app.get("/auth", Routes.Auth);
     app.get("/user", Routes.User);
@@ -40,11 +41,12 @@ import { Constants } from "@utils";
     Constants.IS_DEV && Constants.IS_DB_EPHEMERAL && app.get("/dump-state", Routes.DumpState);
     app.get("/bulk-fetch", Routes.BulkFetch);
     app.get("/oauth-info", Routes.OAuth2Info);
+    if (Constants.WEB_UI_ENABLED) app.use("/", express.static(path.join(__dirname, "frontend")));
 
 
     app.use((req, res, next) => {
         res.status(404).send({
-            message: "Not found.",
+            message: "Not found: " + req.path,
             error: true
         });
         logger.error("404", req.method, req.url);
