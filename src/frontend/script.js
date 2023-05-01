@@ -21,6 +21,27 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+const keySequence = [];
+const konamiCode = [ 38, 38, 40, 40, 37, 39, 37, 39, 66, 65 ];
+
+document.addEventListener("keydown", (event) => {
+    keySequence.push(event.keyCode);
+    if (keySequence.length > konamiCode.length) {
+        keySequence.shift();
+    }
+    if (keySequence.length === konamiCode.length) {
+        if (keySequence.every((value, index) => value === konamiCode[index])) {
+            document.getElementById("navbar").remove();
+        }
+    }
+});
+
+function toggleTheme() {
+    const theme = document.body.classList.contains("theme-light") ? "dark" : "light";
+    localStorage.setItem("theme", theme);
+    onThemeChange(theme);
+}
+
 function onThemeChange(theme) {
     if (![ "light", "dark" ].includes(theme)) {
         throw new TypeError("Invalid theme. Must be either 'light' or 'dark'.");
