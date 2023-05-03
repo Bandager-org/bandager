@@ -1,0 +1,41 @@
+
+name: eslint
+
+on: 
+    push:
+        branches: [ master ]
+    pull_request:
+        branches: [ master ]
+
+jobs:
+    lint:
+        runs-on: ubuntu-latest
+        steps:
+            # we will want to:
+            # set up node 18
+            # install dependencies
+            # run npm run lint
+            # if the lint fails, we will want to fail the build
+
+            - name: Set up Node 18
+              uses: actions/setup-node
+              with:
+                  node-version: 18
+
+            - name: install pnpm
+              run: npm install -g pnpm
+                
+            - name: Install dependencies
+              run: pnpm install
+            
+            - name: Lint with ESLint
+              run: ppm run lint
+              
+            - name: Fail if lint fails
+              run: |
+                  if [ -f "eslint-output.json" ]; then
+                      echo "ESLint found some errors"
+                      exit 1
+                  fi
+
+
