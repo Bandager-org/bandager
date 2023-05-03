@@ -18,9 +18,9 @@ jobs:
             # if the lint fails, we will want to fail the build
 
             - name: Set up Node 18
-              uses: actions/setup-node@1
+              uses: actions/setup-node@v3
               with:
-                  node-version: 18
+                  node-version: '>=18'
 
             - name: install pnpm
               run: npm install -g pnpm
