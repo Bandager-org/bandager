@@ -18,7 +18,7 @@ jobs:
             # if the lint fails, we will want to fail the build
 
             - name: Set up Node 18
-              uses: actions/setup-node
+              uses: actions/setup-node@1
               with:
                   node-version: 18
 
