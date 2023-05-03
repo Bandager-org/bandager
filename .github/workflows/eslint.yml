@@ -17,6 +17,9 @@ jobs:
             # run npm run lint
             # if the lint fails, we will want to fail the build
 
+            - name: Checkout
+              uses: actions/checkout@v2
+
             - name: Set up Node 18
               uses: actions/setup-node@v3
               with:
@@ -24,10 +27,6 @@ jobs:
 
             - name: install pnpm
               run: npm install -g pnpm
-                
-            # debugging: ls
-            - name: debugging
-              run: ls -a
 
             - name: Install dependencies
               run: pnpm install
