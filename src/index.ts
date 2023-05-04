@@ -5,6 +5,7 @@ import * as Routes from "@routes";
 import { run } from "@discord";
 import { Constants } from "@utils";
 import path from "path";
+import * as fs from "fs";
 
 (async () => {
     const app: express.Application = express();
@@ -41,7 +42,69 @@ import path from "path";
     Constants.IS_DEV && Constants.IS_DB_EPHEMERAL && app.get("/dump-state", Routes.DumpState);
     app.get("/bulk-fetch", Routes.BulkFetch);
     app.get("/oauth-info", Routes.OAuth2Info);
-    if (Constants.WEB_UI_ENABLED) app.use("/", express.static(path.join(__dirname, "frontend")));
+
+    function modifiedStatic(req: any, res: any, next: any) {
+        // mimic the behavior of express.static
+        // but disallow base.html
+
+        // read the file
+        let file = path.join(__dirname, "frontend", req.path);
+        if (file.endsWith("/")) {
+            file = file + "index.html";
+        }
+
+        const allowedExtensions: string[] = [
+            "html",
+            "css",
+            "js",
+            "png",
+            "jpg",
+            "jpeg",
+            "gif",
+            "svg",
+            "ico"
+        ]
+
+        if (!allowedExtensions.includes(file.split(".").pop()!)) {
+            // check if .html exists
+            const htmlFile = file + ".html";
+            if (fs.existsSync(htmlFile)) {
+                file = htmlFile;
+            } else {
+                return next();
+            }
+        }
+
+        if (!fs.existsSync(file)) {
+            return next();
+        }
+
+        if (file.endsWith("base.html")) {
+            return next();
+        }
+
+        const isHtml = file.endsWith(".html");
+
+        if (isHtml) {
+            // read the file
+            const buf = fs.openSync(file, "r");
+            const data = fs.readFileSync(buf);
+            fs.closeSync(buf);
+
+            // read base.html
+            const base = path.join(__dirname, "frontend", "base.html");
+            const baseBuf = fs.openSync(base, "r");
+            const baseData = fs.readFileSync(baseBuf);
+            fs.closeSync(baseBuf);
+
+            const final = baseData.toString().replace("{{CONTENT}}", data.toString());
+            res.send(final);
+        } else {
+            res.sendFile(file);
+        }
+    }
+
+    if (Constants.WEB_UI_ENABLED) app.use("/", modifiedStatic);
 
 
     app.use((req, res, next) => {

@@ -19,9 +19,69 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("navbar").classList.add("expanded");
         }
     });
+
+    initContact();
+    initLinks();
 });
 
-const keySequence = [];
+function initContact() {
+    const contacts = [
+        {
+            name: "Discord Server",
+            url: "discord"
+        },
+        {
+            name: "GitHub",
+            url: "github"
+        },
+        {
+            name: "Youtube",
+            // rickroll
+            url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+        }
+    ];
+    const contactList = document.getElementById("contact-list");
+    for (const contact of contacts) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        if (contact.url.startsWith("http")) {
+            a.href = contact.url;
+        } else {
+            a.href = `/${contact.url}`;
+        }
+        a.innerText = contact.name;
+        li.appendChild(a);
+        contactList.appendChild(li);
+    }
+}
+
+function initLinks() {
+    const links = [
+        {
+            name: "Home",
+            url: "/"
+        },
+        {
+            name: "Projects",
+            url: "/projects"
+        },
+        {
+            name: "About",
+            url: "/about"
+        }
+    ];
+    const linkList = document.getElementById("link-list");
+    for (const link of links) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.href = link.url;
+        a.innerText = link.name;
+        li.appendChild(a);
+        linkList.appendChild(li);
+    }
+}
+
+let keySequence = [];
 const konamiCode = [ 38, 38, 40, 40, 37, 39, 37, 39, 66, 65 ];
 
 document.addEventListener("keydown", (event) => {

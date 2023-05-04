@@ -134,16 +134,15 @@ Because if, somehow, a style is overriden, it's not gonna affect the error banne
 .navbar-content {
     position: absolute;
     top: 60px;
-    display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    margin: 15px;
 }
-.navbar-content > :first-child {
-    background-color: #FFFFFF;
-    padding: 5px;
-    border: var(--primary-color) 15px solid;
-    border-radius: 5px;
+a {
+    color: var(--accent-color);
 }
 #theme-toggle:hover > svg > :first-child {
     transform: translate(15px, -15px);

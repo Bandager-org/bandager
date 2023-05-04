@@ -11,7 +11,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "build": "tsc && tsc-alias && pnpm run copyfiles",
-    "copyfiles": "copyfiles -f src/frontend/**/*.{html,css,js} dist/frontend"
+    "copyfiles": "copyfiles -f src/frontend/**/*.{html,css,js,ico} dist/frontend"
   },
   "keywords": [],
   "author": "",
