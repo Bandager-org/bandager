@@ -63,9 +63,9 @@ import * as fs from "fs";
             "gif",
             "svg",
             "ico"
-        ]
+        ];
 
-        if (!allowedExtensions.includes(file.split(".").pop()!)) {
+        if (!allowedExtensions.includes(file.split(".").pop())) {
             // check if .html exists
             const htmlFile = file + ".html";
             if (fs.existsSync(htmlFile)) {
