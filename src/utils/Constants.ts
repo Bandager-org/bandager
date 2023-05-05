@@ -10,8 +10,8 @@ export const Constants = {
         USERS: "users",
         AUTH_TOKENS: "authtokens",
     }),
-    DEVS: devs,
-    MODS: devs.concat(mods),
+    DEVS: devs as string[],
+    MODS: devs.concat(mods) as string[],
     // Environment = "Production" | "Development"
     ENV: process.env.PROD ? "PROD" : "DEV",
     IS_DEV: !process.env.PROD,

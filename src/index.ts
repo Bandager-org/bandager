@@ -97,7 +97,18 @@ import * as fs from "fs";
             const baseData = fs.readFileSync(baseBuf);
             fs.closeSync(baseBuf);
 
-            const final = baseData.toString().replace("{{CONTENT}}", data.toString());
+            let content = data.toString();
+            let head = "";
+
+            // does content contain "<!-- CONTENT -->"?
+            if (content.includes("<!-- CONTENT -->")) {
+                // skip forward to <!-- CONTENT -->
+                const start = content.indexOf("<!-- CONTENT -->") + "<!-- CONTENT -->".length;
+                content = content.substring(start);
+                // make head the stuff before <!-- CONTENT -->
+                head = data.toString().substring(0, start - "<!-- CONTENT -->".length);
+            }
+            const final = baseData.toString().replace("{{CONTENT}}", content).replace("{{HEAD}}", head);
             res.send(final);
         } else {
             res.sendFile(file);

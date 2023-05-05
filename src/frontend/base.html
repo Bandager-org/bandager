@@ -1,45 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Bandager WebUI</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="script.js"></script>
+    <meta charset="UTF-8">
+    <title>Bandager WebUI</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+    {{HEAD}}
 </head>
 <body class="theme-dark">
-<div class="navbar" id="navbar">
-  <div aria-label="Expand" id="expand-nav" class="navbar-item no-tooltip">
-    <svg class="button-content" width="40" height="40" viewBox="0 0 40 40">
-      <rect x="0" y="2.5" width="40" height="5" fill="currentColor" />
-      <rect x="0" y="19.5" width="40" height="5" fill="currentColor" />
-      <rect x="0" y="34.5" width="40" height="5" fill="currentColor" />
-    </svg>
-  </div>
-  <div aria-label="Toggle theme" class="navbar-item" id="theme-toggle" onclick="toggleTheme()">
-    <svg class="button-content" width="40" height="40" xmlns="http://www.w3.org/2000/svg">
-      <path fill="currentColor" stroke="currentColor" d="m40,17.1976l-6.93977,2.46882l0,-4.935l6.93977,2.46618zm-5.03885,-12.16136l-3.16162,6.65451l-3.48896,-3.49158l6.65056,-3.16293l0.00002,0zm-12.16005,-5.03623l2.46751,6.94108l-4.93633,0l2.46882,-6.94108zm-12.16136,5.03623l6.6532,3.16293l-3.49027,3.49158l-3.16293,-6.65451zm-5.03754,12.16136l6.94108,-2.46618l0,4.935l-6.94108,-2.46882zm5.03754,12.16136l3.16293,-6.65187l3.49027,3.49027l-6.6532,3.16162l0,0l0,-0.00002zm12.16136,5.04018l-2.46882,-6.94241l4.93633,0l-2.46751,6.94241zm12.16005,-5.04018l-6.65187,-3.16029l3.48896,-3.49027l3.16293,6.65056l-0.00002,0zm-20.75884,-12.16136l0,0c0,-4.74833 3.85046,-8.59879 8.60012,-8.59879c4.74833,0 8.60012,3.85046 8.60012,8.59879c0,4.74964 -3.85178,8.60012 -8.60012,8.60012c-4.75097,0 -8.60012,-3.85046 -8.60012,-8.60012l0,0z" id="svg_7" stroke-width="0"/>
-      <path transform="rotate(-45, 10.41, 29.5897)" fill="currentColor" stroke="currentColor" d="m18.44951,45.19709l0,0c-8.87939,0 -16.07898,-6.98644 -16.07898,-15.60741c0,-8.61986 7.1996,-15.60741 16.07898,-15.60741l0,0c-5.06037,3.68429 -8.03894,9.46694 -8.03894,15.60741s2.97858,11.92202 8.03894,15.60741z" id="svg_8" stroke-width="0"/>
-    </svg>
-  </div>
+    <div class="navbar" id="navbar">
+        <div aria-label="Expand" id="expand-nav" class="navbar-item no-tooltip">
+            <svg class="button-content" width="40" height="40" viewBox="0 0 40 40">
+                <rect x="0" y="2.5" width="40" height="5" fill="currentColor" />
+                <rect x="0" y="19.5" width="40" height="5" fill="currentColor" />
+                <rect x="0" y="34.5" width="40" height="5" fill="currentColor" />
+            </svg>
+        </div>
+        <div aria-label="Toggle theme" class="navbar-item" id="theme-toggle" onclick="toggleTheme()">
+            <svg class="button-content" width="40" height="40" xmlns="http://www.w3.org/2000/svg">
+                <path fill="currentColor" stroke="currentColor" d="m40,17.1976l-6.93977,2.46882l0,-4.935l6.93977,2.46618zm-5.03885,-12.16136l-3.16162,6.65451l-3.48896,-3.49158l6.65056,-3.16293l0.00002,0zm-12.16005,-5.03623l2.46751,6.94108l-4.93633,0l2.46882,-6.94108zm-12.16136,5.03623l6.6532,3.16293l-3.49027,3.49158l-3.16293,-6.65451zm-5.03754,12.16136l6.94108,-2.46618l0,4.935l-6.94108,-2.46882zm5.03754,12.16136l3.16293,-6.65187l3.49027,3.49027l-6.6532,3.16162l0,0l0,-0.00002zm12.16136,5.04018l-2.46882,-6.94241l4.93633,0l-2.46751,6.94241zm12.16005,-5.04018l-6.65187,-3.16029l3.48896,-3.49027l3.16293,6.65056l-0.00002,0zm-20.75884,-12.16136l0,0c0,-4.74833 3.85046,-8.59879 8.60012,-8.59879c4.74833,0 8.60012,3.85046 8.60012,8.59879c0,4.74964 -3.85178,8.60012 -8.60012,8.60012c-4.75097,0 -8.60012,-3.85046 -8.60012,-8.60012l0,0z" id="svg_7" stroke-width="0"/>
+                <path transform="rotate(-45, 10.41, 29.5897)" fill="currentColor" stroke="currentColor" d="m18.44951,45.19709l0,0c-8.87939,0 -16.07898,-6.98644 -16.07898,-15.60741c0,-8.61986 7.1996,-15.60741 16.07898,-15.60741l0,0c-5.06037,3.68429 -8.03894,9.46694 -8.03894,15.60741s2.97858,11.92202 8.03894,15.60741z" id="svg_8" stroke-width="0"/>
+            </svg>
+        </div>
 
-  <div class="navbar-content">
-    <div>
-      <h1>Contact</h1>
-      <ul id="contact-list">
+        <div class="navbar-content">
+            <div>
+                <h1>Contact</h1>
+                <ul id="contact-list">
 
-      </ul>
+                </ul>
+            </div>
+            <div>
+                <h1>Links</h1>
+                <ul id="link-list">
+
+                </ul>
+            </div>
+        </div>
     </div>
-    <div>
-      <h1>Links</h1>
-      <ul id="link-list">
-
-      </ul>
+    <div class="fake-navbar" aria-label="Error banner">
+        If you are seeing this, <strong>you</strong> have just <strong>encountered</strong> a <strong>bug</strong>. Please <strong>report</strong> it to the developer over <strong>at</strong> our <a class="ohshit" href="/discord">Discord server</a>.
     </div>
-  </div>
-</div>
-<div class="fake-navbar" aria-label="Error banner">
-  If you are seeing this, <strong>you</strong> have just <strong>encountered</strong> a <strong>bug</strong>. Please <strong>report</strong> it to the developer over <strong>at</strong> our <a class="ohshit" href="/discord">Discord server</a>.
-</div>
-{{CONTENT}}
+    <div class="content">
+        {{CONTENT}}
+    </div>
 </body>
 </html>

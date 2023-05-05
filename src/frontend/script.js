@@ -1,4 +1,5 @@
-document.addEventListener("DOMContentLoaded", () => {
+global = {};
+document.addEventListener("DOMContentLoaded", async () => {
     // read theme from local storage
     const theme = localStorage.getItem("theme");
     if (theme) {
@@ -22,7 +23,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
     initContact();
     initLinks();
+    initPageSpecifics();
+
+    // fetch client ID from server (/oauth-info)
+    const res = await fetch("/oauth-info").then(res => res.json());
+    global.clientId = res.id;
 });
+
+function initPageSpecifics() {
+    // check the path
+    const path = window.location.pathname;
+    switch (path) {
+        case "/": {
+            const btn = document.getElementsByClassName("login-button")[0];
+            btn.addEventListener("click", () => {
+                window.location.href = `https://discord.com/api/oauth2/authorize?client_id=${global.clientId}&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth&response_type=code&scope=identify`;
+            });
+            break;
+        }
+
+        default:
+            break;
+    }
+}
 
 function initContact() {
     const contacts = [

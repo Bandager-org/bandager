@@ -148,3 +148,6 @@ a {
     transform: translate(15px, -15px);
 }
 
+.content {
+    margin-left: 15px;
+}

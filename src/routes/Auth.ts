@@ -61,7 +61,7 @@ export const Auth = routeMaker("auth", async (req: any, res: any, logger: Logger
 
     // generate a token
     const token = await db.generateToken(id);
-    db.setToken(id, token);
+    await db.setToken(id, token);
     return res.status(200).send({
         token: token,
         error: false

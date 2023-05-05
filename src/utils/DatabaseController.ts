@@ -2,6 +2,8 @@ import {Pool} from "pg";
 import {Constants} from "./Constants";
 import { User, UserDBEntry } from "@interfaces/User";
 import * as BCrypt from "bcrypt";
+import * as process from "process";
+
 
 export class DatabaseController {
     // this is a singleton class
@@ -50,7 +52,7 @@ export class DatabaseController {
             };
         }
 
-
+        // what is webstorm smoking .includes() is a function
         user.dev = Constants.DEVS.includes(entry.id);
         user.mod = Constants.MODS.includes(entry.id);
 
@@ -66,7 +68,7 @@ export class DatabaseController {
     public async setToken(userId: string, token: string) {
         // if the table doesn't exist, and the db isn't ephemeral, create it
         if (!Constants.IS_DB_EPHEMERAL) {
-            await this.pool.query(`CREATE TABLE IF NOT EXISTS ${Constants.TABLES.AUTH_TOKENS} (id TEXT PRIMARY KEY, token TEXT`);
+            await this.pool.query(`CREATE TABLE IF NOT EXISTS ${Constants.TABLES.AUTH_TOKENS} (id TEXT PRIMARY KEY, token TEXT)`);
         }
         // hash the token, with salt.
         const salt = await BCrypt.genSalt(10);
@@ -84,7 +86,7 @@ export class DatabaseController {
 
     public async generateToken(id: string) {
         const idAsInt: number = parseInt(id);
-        const token = [Math.random().toString(36).substring(2, 15), idAsInt.toString(36),  Math.random().toString(36).substring(2, 15)].join(".");
+        const token: string = [Math.random().toString(36).substring(2, 15), idAsInt.toString(36),  Math.random().toString(36).substring(2, 15)].join(".");
         return token;
     }
 
