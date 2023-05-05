@@ -34,11 +34,5 @@ jobs:
             - name: Lint with ESLint
               run: pnpm run lint
               
-            - name: Fail if lint fails
-              run: |
-                  if [ -f "eslint-output.json" ]; then
-                      echo "ESLint found some errors"
-                      exit 1
-                  fi
 
 

@@ -22,11 +22,11 @@ From here, you can do a number of things. You can see all the predefined scripts
 
 To run one of these scripts, you can run `pnpm run <script>`, for example, `pnpm run start`.
 
+This is only for the backend. For the vencord plugin, which uses the backend, see [Bandager-org/VencordPlugin](https://github.com/Bandager-org/VencordPlugin)
+
 
 ## Contributing
 If you would like to contribute to Bandager, you can do so by forking the repository, making your changes, and then opening a pull request. Please make sure your code passes the linter, and that you have tested your changes before opening a pull request.
 
 ## License
-Currently, as you can see, there is no license. This is going to change soon, but you are free to use Bandager and it's code as you wish, as long as you do not claim it as your own.
-
-###### (I have no idea if that's how licenses work, but I'm  going to assume it is)
+Bandager is licensed under [AGPL v3](https://choosealicense.com/licenses/agpl-3.0/) which means you are free to use, modify, and distribute the software, as long as you provide the source code to the end user, and any changes you make to the software are also licensed under AGPL v3. For more information, see the [license](LICENSE) file.
